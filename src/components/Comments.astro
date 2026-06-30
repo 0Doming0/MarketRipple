@@ -1,0 +1,317 @@
+---
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+---
+
+<div 
+  id="cusdis_thread"
+  data-host="https://cusdis.com"
+  data-app-id="b6211345-e195-46a4-bfba-c6242a9543d9"
+  data-page-id="styleguide"
+  data-page-url={Astro.url.href}
+  data-page-title={SITE_TITLE}
+></div>
+
+<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+
+<script is:inline>
+
+  
+  // ============================================
+  // Configuração de Paginação de Comentários
+  // ============================================
+  const COMENTARIOS_POR_CLIQUE = 2;
+  let comentariosVisiveis = COMENTARIOS_POR_CLIQUE;
+  
+  function iniciarPaginacao(iframeDocument, root) {
+    const container = iframeDocument.querySelector('div.mt-4.px-1');
+    if (!container) return;
+    
+    const comentarios = container.querySelectorAll('div.my-4');
+    const totalComentarios = comentarios.length;
+    if (totalComentarios === 0) return;
+    
+    // Função auxiliar para atualizar visibilidade dos comentários
+    function atualizarVisibilidade() {
+      for (let i = 0; i < totalComentarios; i++) {
+        if (i < comentariosVisiveis) {
+          comentarios[i].style.display = 'block';
+        } else {
+          comentarios[i].style.display = 'none';
+        }
+      }
+    }
+    
+    // Mostrar comentários inicialmente
+    atualizarVisibilidade();
+    
+    // Criar botão
+    const botao = iframeDocument.createElement('button');
+    botao.setAttribute('name', 'show-more-comments');
+    botao.textContent = 'Mostrar mais comentários';
+    
+    botao.addEventListener('click', function() {
+      comentariosVisiveis += COMENTARIOS_POR_CLIQUE;
+      
+      // Atualizar visibilidade dos comentários
+      atualizarVisibilidade();
+      
+      // Remover botão se chegou ao final
+      if (comentariosVisiveis >= totalComentarios) {
+        botao.remove();
+      }
+      
+      setTimeout(() => forcarAlturaCusdis(), 100);
+    });
+    
+    // Mostrar botão apenas se há mais comentários
+    if (comentariosVisiveis < totalComentarios) {
+      root.appendChild(botao);
+    }
+  }
+  
+  
+  // ============================================
+  // Função para Ajustar Altura do Iframe
+  // ============================================
+  function forcarAlturaCusdis() {
+    const iframe = document.querySelector('#cusdis_thread iframe');
+    
+    if (iframe) {
+      const container = document.getElementById('cusdis_thread');
+      if (container) {
+        container.style.height = 'auto';
+        container.style.overflow = 'visible';
+      }
+
+      iframe.setAttribute('scrolling', 'no');
+      iframe.style.overflow = 'visible';
+      
+      const alturaReal = iframe.contentWindow?.document?.body?.scrollHeight || iframe.contentDocument?.body?.scrollHeight;
+      
+      if (alturaReal && alturaReal > 0) {
+        iframe.style.setProperty('height', (alturaReal + 40) + 'px', 'important');
+      } else {
+        // Se não conseguir acessar, deixa auto para crescer naturalmente
+        iframe.style.setProperty('height', 'auto', 'important');
+      }
+    }
+  }
+
+  // Executa repetidamente para ajustar altura continuamente
+  window.addEventListener('load', () => {
+    let t = 0;
+    const interval = setInterval(() => {
+      forcarAlturaCusdis();
+      t++;
+      if (t > 20) clearInterval(interval); // Continua por mais tempo
+    }, 500);
+  });
+  var batchSize = 1;
+  
+  function limparEstilosPadraoCusdis() {
+    const container = document.getElementById('cusdis_thread');
+    if (!container) return;
+    
+    const iframe = container.querySelector("iframe");
+    if (!iframe) return;
+    
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!iframeDocument) return;
+
+    
+
+    const root = iframeDocument.getElementById('root') || iframeDocument.documentElement;
+    
+    // Adicionar estilo ao head do iframe
+    const styleTag = iframeDocument.createElement('style');
+    styleTag.textContent = `
+      /* Reset e Container */
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        background-color: transparent !important;
+        color: #e2e8f0 !important;
+      }
+
+      div#root {
+        background-color: #151c29;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+
+      /* Botão de Comentário */
+      button.font-bold {
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(59, 130, 246, 0.35) !important;
+        border-radius: 0.75rem !important;
+        padding: 0.9rem 1.25rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        cursor: pointer !important;
+        box-shadow: 0 10px 25px rgba(14, 165, 233, 0.18) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+      }
+
+      button.font-bold:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 14px 30px rgba(14, 165, 233, 0.24) !important;
+      }
+
+      /* Botão de Abrir Mais */
+      button[name="button-show-more-comments"] {
+        display: block !important;
+        margin: 1.5rem auto !important;
+        background-color: transparent !important;
+        color: #94a3b8 !important;
+        border: 1px solid #475569 !important;
+        border-radius: 0.5rem !important;
+        padding: 0.625rem 1.25rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        position: relative !important;
+        padding-bottom: 2rem !important;
+      }
+
+      button[name="button-show-more-comments"]::after {
+        content: "↓" !important;
+        display: block !important;
+        position: absolute !important;
+        bottom: 0rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        font-size: 1.5rem !important;
+      }
+
+      button[name="button-show-more-comments"]:hover {
+        border-color: #94a3b8 !important;
+        color: #e2e8f0 !important;
+      }
+
+      div.mt-4.px-1 {
+        border-top: 1px solid #334155 !important;
+        padding-top: 1.5rem !important;
+        margin-top: 1.5rem !important;
+      }
+
+      div.border-l-2 {
+        border-left-color: #0ea5e9 !important;
+        padding-left: 1rem !important;
+      }
+
+      /* Labels */
+      label {
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        color: #94a3b8 !important;
+        margin-bottom: 0.5rem !important;
+        display: block !important;
+      }
+
+      /* Inputs */
+      input, textarea[name="reply_content"] {
+        width: 100% !important;
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #ffffff !important;
+        border-radius: 0.5rem !important;
+        padding: 0.75rem !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box !important;
+      }
+
+      input:focus, textarea[name="reply_content"]:focus {
+        border-color: #10b981 !important;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+        background-color: #0f172a !important;
+      }
+
+      textarea[name="reply_content"] {
+        min-height: 110px !important;
+        resize: vertical !important;
+      }
+
+      /* Botão Submit */
+      form button[type="submit"], form button:not([title]) {
+        background-color: #10b981 !important;
+        color: #022c22 !important;
+        font-weight: 700 !important;
+        font-size: 0.875rem !important;
+        padding: 0.625rem 1.25rem !important;
+        border-radius: 0.5rem !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+      }
+
+      form button[type="submit"]:hover {
+        background-color: #059669 !important;
+      }
+
+      /* Comentários */
+      .my-4 {
+        border-bottom: 1px solid #1e293b !important;
+        padding-bottom: 1.25rem !important;
+        margin-bottom: 1.25rem !important;
+      }
+
+      .flex.items-center div:first-child {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+      }
+
+      .text-gray-500.text-sm {
+        color: #7386a0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      .my-2 p {
+        color: #c7d1dd !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+      }
+
+      /* Botão Reply */
+      div > button[type="button"] {
+        background-color: transparent !important;
+        border: 1px solid #334155 !important;
+        color: #94a3b8 !important;
+        font-weight: 500 !important;
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 0.375rem !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+      }
+
+      div > button[type="button"]:hover {
+        border-color: #10b981 !important;
+        color: #10b981 !important;
+      }
+
+      .powered-by, a[href*="cusdis"] {
+        display: none !important;
+      }
+    `;
+    iframeDocument.head.appendChild(styleTag);
+
+    // Iniciar sistema de paginação de comentários com parâmetros corretos
+    iniciarPaginacao(iframeDocument, root);
+
+    // Adicionar event listeners a todos os buttons para recalcular altura
+    const buttons = iframeDocument.querySelectorAll('button');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        setTimeout(() => {
+          forcarAlturaCusdis();
+        }, 100); // Pequeno delay para o DOM atualizar
+      });
+    });
+  }
+  
+  setTimeout(limparEstilosPadraoCusdis, 1200);
+
+</script>

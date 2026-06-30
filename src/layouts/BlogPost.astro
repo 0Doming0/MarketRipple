@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+import Comments from '../components/Comments.astro';
+import NewsletterBox from '../components/NewsletterBox.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+			.last-updated-on {
+				font-style: italic;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="prose">
+					<div class="title">
+						<div class="date">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+						<h1>{title}</h1>
+						<hr />
+					</div>
+					<slot />
+				</div>
+			</article>
+		</main>
+		<Comments />
+		<NewsletterBox />
+		<Footer />
+		<script is:inline>
+  // Usamos is:inline para garantir que o Astro não processe ou mova este script de inicialização rápida
+  (function() {
+    // Insira aqui o ID do seu AdSense (ex: ca-pub-XXXXXXXXXXXXXXXX) quando tiver
+    const ADSENSE_ID = 'pub-4470799152097164'; 
+    let adsInitiated = false;
+
+    function injectAdSense() {
+      if (adsInitiated) return;
+      adsInitiated = true;
+
+      // Remove os listeners para liberar memória
+      window.removeEventListener('scroll', injectAdSense);
+      window.removeEventListener('mousemove', injectAdSense);
+      window.removeEventListener('touchstart', injectAdSense);
+
+      // Cria e injeta dinamicamente a tag do Google
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`;
+      
+      document.head.appendChild(script);
+      console.log('[MarketRipple Ads]: Redes de anúncios carregadas via Lazy-Load.');
+    }
+
+    // Escuta a primeira interação real do usuário no celular ou desktop
+    window.addEventListener('scroll', injectAdSense, { passive: true });
+    window.addEventListener('mousemove', injectAdSense, { passive: true });
+    window.addEventListener('touchstart', injectAdSense, { passive: true });
+  })();
+</script>
+
+	</body>
+</html>
