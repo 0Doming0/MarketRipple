@@ -16,6 +16,7 @@
     "@astrojs/mdx": "^7.0.0",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vercel": "^11.0.0",
     "@bruits/satteri-win32-x64-msvc": "0.9.3",
     "@tailwindcss/vite": "^4.3.1",
     "astro": "^7.0.3",
