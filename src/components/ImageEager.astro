@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+// 1. Importe o tipo ImageMetadata para aceitar imagens locais corretamente
+import type { ImageMetadata } from 'astro'; 
+
+// 2. Defina explicitamente o que o seu componente de imagem aceita
+interface Props {
+  ImageSrc: string | ImageMetadata; // Aceita tanto link de internet quanto import local
+  alt: string;
+  width?: number;  // O "?" torna opcional, caso queira definir um padrão
+  height?: number; // O "?" torna opcional
+}
+
+// 3. Pegue os atributos com valores padrão (opcional, para te dar menos trabalho)
+const { 
+  ImageSrc, 
+  alt, 
+  width = 800,  // Se você esquecer de passar o width, ele assume 800
+  height = 450  // Se você esquecer de passar o height, ele assume 450
+} = Astro.props;
+---
+
+<Image 
+  src={ImageSrc} 
+  alt={alt} 
+  width={width} 
+  height={height} 
+  loading="eager" 
+  fetchpriority="high"/>

@@ -1,0 +1,358 @@
+---
+// Risk Management Simulator using Kelly Criterion
+// Usage: <RiskManagementSimulator initialCapital={1000} />
+
+interface Props {
+  initialCapital?: number;
+}
+
+const { initialCapital = 1000 } = Astro.props;
+
+// Generate unique ID for multiple simulators on same page
+const simulatorId = Math.random().toString(36).substring(7);
+---
+
+<div class="risk-simulator" data-simulator-id={simulatorId}>
+  <div class="simulator-container">
+    <h3>🎯 Kelly Criterion Risk Simulator</h3>
+    <p class="simulator-subtitle">See how proper risk management protects your capital during volatile markets</p>
+
+    <div class="simulator-inputs">
+      <div class="input-group">
+        <label for={`capital-${simulatorId}`}>Starting Capital (USD)</label>
+        <input 
+          type="number" 
+          id={`capital-${simulatorId}`}
+          value={initialCapital}
+          min="10"
+          class="input-field"
+        />
+      </div>
+
+      <div class="input-group">
+        <label for={`win-rate-${simulatorId}`}>Win Rate (%)</label>
+        <input 
+          type="range" 
+          id={`win-rate-${simulatorId}`}
+          value="55"
+          min="30"
+          max="80"
+          class="slider"
+        />
+        <span class="slider-value" id="win-rate-value">55%</span>
+      </div>
+
+      <div class="input-group">
+        <label for={`win-loss-ratio-${simulatorId}`}>Win/Loss Ratio</label>
+        <input 
+          type="range" 
+          id={`win-loss-ratio-${simulatorId}`}
+          value="1.5"
+          min="0.5"
+          max="3"
+          step="0.1"
+          class="slider"
+        />
+        <span class="slider-value" id="ratio-value">1.5x</span>
+      </div>
+
+      <div class="input-group">
+        <label for={`trades-${simulatorId}`}>Number of Trades</label>
+        <input 
+          type="range" 
+          id={`trades-${simulatorId}`}
+          value="10"
+          min="1"
+          max="50"
+          class="slider"
+        />
+        <span class="slider-value" id="trades-value">10</span>
+      </div>
+    </div>
+
+    <div class="simulator-results">
+      <div class="result-card aggressive">
+        <div class="result-label">❌ Aggressive (100% risk)</div>
+        <div class="result-value" id="aggressive-result">$1000</div>
+        <div class="result-subtitle" id="aggressive-change">+0%</div>
+      </div>
+
+      <div class="result-card safe">
+        <div class="result-label">✅ Kelly Criterion (Optimal)</div>
+        <div class="result-value" id="kelly-result">$1000</div>
+        <div class="result-subtitle" id="kelly-change">+0%</div>
+      </div>
+
+      <div class="result-card conservative">
+        <div class="result-label">🛡️ Conservative (2%)</div>
+        <div class="result-value" id="conservative-result">$1000</div>
+        <div class="result-subtitle" id="conservative-change">+0%</div>
+      </div>
+    </div>
+
+    <div class="kelly-formula">
+      <div class="formula-text">
+        <strong>Kelly Formula:</strong> f = (bp - q) / b<br/>
+        <small>f = fraction of capital to risk | b = odds | p = win rate | q = loss rate</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ simulatorId, initialCapital }}>
+  class RiskSimulator {
+    constructor(id, initial) {
+      this.id = id;
+      this.initialCapital = initial;
+      this.setupEventListeners();
+      this.runSimulation();
+    }
+
+    setupEventListeners() {
+      const capital = document.getElementById(`capital-${this.id}`);
+      const winRate = document.getElementById(`win-rate-${this.id}`);
+      const ratio = document.getElementById(`win-loss-ratio-${this.id}`);
+      const trades = document.getElementById(`trades-${this.id}`);
+
+      if (capital) capital.addEventListener('input', () => this.runSimulation());
+      if (winRate) {
+        winRate.addEventListener('input', (e) => {
+          document.getElementById('win-rate-value').textContent = e.target.value + '%';
+          this.runSimulation();
+        });
+      }
+      if (ratio) {
+        ratio.addEventListener('input', (e) => {
+          document.getElementById('ratio-value').textContent = (parseFloat(e.target.value)).toFixed(1) + 'x';
+          this.runSimulation();
+        });
+      }
+      if (trades) {
+        trades.addEventListener('input', (e) => {
+          document.getElementById('trades-value').textContent = e.target.value;
+          this.runSimulation();
+        });
+      }
+    }
+
+    runSimulation() {
+      const capital = parseFloat(document.getElementById(`capital-${this.id}`).value) || 1000;
+      const winRate = parseFloat(document.getElementById(`win-rate-${this.id}`).value) / 100;
+      const ratio = parseFloat(document.getElementById(`win-loss-ratio-${this.id}`).value);
+      const trades = parseInt(document.getElementById(`trades-${this.id}`).value);
+
+      // Calculate Kelly Criterion
+      const p = winRate;
+      const q = 1 - winRate;
+      const b = ratio;
+      const kelly = (b * p - q) / b;
+      const kellyPercent = Math.max(0, Math.min(kelly, 0.25)); // Cap at 25%
+
+      // Run simulations
+      const aggressive = this.simulateTrades(capital, trades, winRate, ratio, 1.0);
+      const optimal = this.simulateTrades(capital, trades, winRate, ratio, kellyPercent);
+      const conservative = this.simulateTrades(capital, trades, winRate, ratio, 0.02);
+
+      // Update DOM
+      this.updateResult('aggressive', aggressive, capital);
+      this.updateResult('kelly', optimal, capital);
+      this.updateResult('conservative', conservative, capital);
+    }
+
+    simulateTrades(capital, trades, winRate, ratio, riskPercent) {
+      let balance = capital;
+
+      for (let i = 0; i < trades; i++) {
+        const riskAmount = balance * riskPercent;
+        const isWin = Math.random() < winRate;
+
+        if (isWin) {
+          balance += riskAmount * ratio;
+        } else {
+          balance -= riskAmount;
+        }
+
+        // Safety: stop if balance goes to 0
+        if (balance <= 0) {
+          balance = 0;
+          break;
+        }
+      }
+
+      return balance;
+    }
+
+    updateResult(type, finalBalance, initial) {
+      const element = document.getElementById(`${type}-result`);
+      const change = document.getElementById(`${type}-change`);
+
+      if (element && change) {
+        element.textContent = `$${finalBalance.toFixed(0)}`;
+        const changePercent = ((finalBalance - initial) / initial * 100).toFixed(1);
+        change.textContent = changePercent >= 0 
+          ? `+${changePercent}%` 
+          : `${changePercent}%`;
+      }
+    }
+  }
+
+  // Initialize
+  const initSimulator = () => {
+    new RiskSimulator(simulatorId, initialCapital);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSimulator);
+  } else {
+    initSimulator();
+  }
+</script>
+
+<style>
+  .risk-simulator {
+    margin: 32px 0;
+    width: 100%;
+  }
+
+  .simulator-container {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 12px;
+    padding: 24px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .simulator-container h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+  }
+
+  .simulator-subtitle {
+    margin: 0 0 24px 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+  }
+
+  .simulator-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-group label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  .input-field,
+  .slider {
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 0.9rem;
+  }
+
+  .input-field:focus,
+  .slider:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+  }
+
+  .slider {
+    cursor: pointer;
+  }
+
+  .slider-value {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .simulator-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .result-card {
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 3px solid;
+  }
+
+  .result-card.aggressive {
+    background: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+  }
+
+  .result-card.safe {
+    background: rgba(34, 197, 94, 0.1);
+    border-left-color: #22c55e;
+  }
+
+  .result-card.conservative {
+    background: rgba(59, 130, 246, 0.1);
+    border-left-color: #3b82f6;
+  }
+
+  .result-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
+  .result-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .result-subtitle {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .kelly-formula {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+
+  .formula-text {
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 640px) {
+    .simulator-container {
+      padding: 16px;
+    }
+
+    .simulator-inputs {
+      grid-template-columns: 1fr;
+    }
+
+    .simulator-results {
+      grid-template-columns: 1fr;
+    }
+
+    .result-value {
+      font-size: 1.2rem;
+    }
+  }
+</style>

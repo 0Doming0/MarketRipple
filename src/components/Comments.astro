@@ -1,27 +1,33 @@
 ---
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
+interface Props {
+  pageId: string
+}
+
+const { pageId } = Astro.props
 ---
 
 <div 
   id="cusdis_thread"
+  style="min-height: 200px;"
   data-host="https://cusdis.com"
   data-app-id="b6211345-e195-46a4-bfba-c6242a9543d9"
-  data-page-id="styleguide"
-  data-page-url={Astro.url.href}
+  data-page-id={Astro.url.pathname}
+  data-page-url={new URL(Astro.url.pathname, Astro.site ?? 'https://marketripple.com').href}
   data-page-title={SITE_TITLE}
 ></div>
 
-<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
 
 <script is:inline>
 
+  
   
   // ============================================
   // Configuração de Paginação de Comentários
   // ============================================
   const COMENTARIOS_POR_CLIQUE = 2;
-  let comentariosVisiveis = COMENTARIOS_POR_CLIQUE;
+  let comentariosVisiveis = 1;
   
   function iniciarPaginacao(iframeDocument, root) {
     const container = iframeDocument.querySelector('div.mt-4.px-1');
@@ -136,7 +142,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
       div#root {
         background-color: #151c29;
         padding: 1rem;
-        border-radius: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0rem 0rem;
       }
 
       /* Botão de Comentário */
@@ -312,6 +318,60 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
     });
   }
   
-  setTimeout(limparEstilosPadraoCusdis, 1200);
+  // ============================================
+  // IntersectionObserver para detetar quando o bloco aparece no ecrã
+  // ============================================
+  
+  const commentsContainer = document.getElementById('cusdis_thread');
+
+  if (commentsContainer) {
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Quando o utilizador chega perto, injetamos o script do Cusdis dinamicamente
+          const script = document.createElement('script');
+          script.src = 'https://cusdis.com/js/cusdis.es.js';
+          script.async = true;
+          script.defer = true;
+          document.body.appendChild(script);
+          setTimeout(limparEstilosPadraoCusdis, 1200);
+          
+          // Desativamos o observer para não repetir o processo
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: "600px" }); // Começa a carregar 200px antes de aparecer no ecrã
+
+    observer.observe(commentsContainer);
+  }
+
+  (function() {
+    const targetNode = document.getElementById('cusdis_thread');
+
+    if (targetNode) {
+      // Cria o observador para detetar o momento exato em que o iframe é injetado
+      const observer = new MutationObserver(function(mutationsList, obs) {
+        for (const mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            const iframe = targetNode.querySelector('iframe');
+            if (iframe) {
+              // Aplica o título para bater 100% de acessibilidade no Lighthouse
+              iframe.setAttribute('title', 'Comments section');
+              
+              // Otimiza o carregamento prevenindo perda de performance (Discover 2026)
+              iframe.setAttribute('loading', 'lazy'); 
+              
+              // Para o observador imediatamente para poupar memória no browser
+              obs.disconnect();
+              break;
+            }
+          }
+        }
+      });
+
+      // Começa a monitorizar o container do Cusdis
+      observer.observe(targetNode, { childList: true });
+    }
+  })();
 
 </script>

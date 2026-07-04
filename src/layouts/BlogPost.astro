@@ -5,18 +5,44 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { authorName, authorLinkedIn, authorGitHub } from '../consts'
+import SchemaAuthor from '../components/SchemaAuthor.astro'
 
 import Comments from '../components/Comments.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, categories, tags, lang, postUrl, pubDate, updatedDate, heroImage, commentCTA } = Astro.props;
+const titleLength = title.length;
+const minFontSize = 1.5;
+const maxFontSize = 3.2;
+const inverseRatio = 1 - Math.min(Math.max(titleLength / 80, 0), 1);
+const adaptiveSize = minFontSize + inverseRatio * (maxFontSize - minFontSize);
+const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}rem`;
+
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} tags={tags} />
+
+        <SchemaAuthor 
+            title={title}
+            description={description}
+            pubDate={pubDate}
+            url={postUrl}
+            image={heroImage}
+            authorName={authorName}
+            authorLinkedin={authorLinkedIn}
+			authorGitHub={authorGitHub} />
+    
+        
+
+		<meta name="robots" content="max-image-preview:large" />
+		{categories && categories.map((cat) => (
+	        <meta property="article:section" content={cat} />
+        ))}
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -24,20 +50,25 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				margin: 0;
 			}
 			.hero-image {
-				width: 100%;
+				width: calc(100% + 2em);
+				
 			}
 			.hero-image img {
 				display: block;
+				position: relative;
+				
 				margin: 0 auto;
-				border-radius: 12px;
+				border-radius: 8px;
 				box-shadow: var(--box-shadow);
+				max-width: 100%;
+				height: auto;
 			}
 			.prose {
-				width: 720px;
+		
 				max-width: calc(100% - 2em);
 				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				padding: 1em 0;
+				border: 2px;
 			}
 			.title {
 				margin-bottom: 1em;
@@ -55,6 +86,41 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.last-updated-on {
 				font-style: italic;
 			}
+			.comment-cta {
+				background: var(--surface);
+				padding: 1.5em;
+				margin: 0 auto;
+				border-radius: 16px;
+				box-shadow: var(--box-shadow);
+				max-width: calc(100% - 2em);
+				text-align: center;
+			}
+			.comment-cta-box {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.75em;
+			}
+			.comment-cta-text {
+				margin: 0;
+				font-size: 1rem;
+				
+			}
+			.comment-cta-link {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.75em 1.25em;
+				border-radius: 9999px;
+				background: var(--color-primary);
+				color: white;
+				text-decoration: none;
+				font-weight: 700;
+				transition: transform 0.2s ease;
+			}
+			.comment-cta-link:hover {
+				transform: translateY(-1px);
+			}
 		</style>
 	</head>
 
@@ -63,9 +129,21 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					{heroImage && <Image width={1200} height={623} src={heroImage} alt="" />}
 				</div>
+				
 				<div class="prose">
+				    <div class="mb-4">
+					  {categories?.length > 0 && (
+  <div class="flex flex-wrap gap-2">
+    {categories.map((cat) => (
+      <span class="inline-flex items-center rounded border border-emerald-800/60 bg-gray-100 px-2.5 py-1 text-xs font-mono uppercase tracking-wider text-emerald-400">
+        {cat}
+      </span>
+    ))}
+  </div>
+)}
+				    </div>
 					<div class="title">
 						<div class="date">
 							<FormattedDate date={pubDate} />
@@ -77,16 +155,28 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 								)
 							}
 						</div>
-						<h1>{title}</h1>
+						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
 						<hr />
 					</div>
 					<slot />
 				</div>
 			</article>
 		</main>
-		<Comments />
+        <hr class = 'big-separator'>
+        <section class="comment-cta">
+          <div class="comment-cta-box">
+            <p class="comment-cta-text" set:html={commentCTA}></p>
+            
+          </div>
+        </section>
+
+        <div id="comment-section">
+          <Comments />
+        </div>
+
 		<NewsletterBox />
 		<Footer />
+		<!--
 		<script is:inline>
   // Usamos is:inline para garantir que o Astro não processe ou mova este script de inicialização rápida
   (function() {
@@ -120,6 +210,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     window.addEventListener('touchstart', injectAdSense, { passive: true });
   })();
 </script>
-
+-->
 	</body>
 </html>

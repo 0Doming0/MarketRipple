@@ -4,6 +4,9 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
 import Comments from '../components/Comments.astro'
+import ImageEager from '../components/ImageEager.astro';
+
+import ImageXrp from '../assets/xrp_0-1024x683.jpg'
 
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
@@ -12,9 +15,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+		
 	
 	<style>
 	    .space-grotesk-bold {
@@ -81,7 +82,12 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			<hr class="separator" />
 		
 			<section class="image-model-full">
-				<img src="https://watcher.guru/news/wp-content/uploads/2024/06/xrp_0-1024x683.jpg" alt="Imagem de exemplo" />
+				<ImageEager 
+				ImageSrc={ImageXrp}
+				alt="Imagem da criptomoeda XRP"
+				width="1024"
+				height="683"
+				/>
 				<div>
 					<h2>Modelo de imagem com texto</h2>
 					<p>Use este bloco para colocar uma imagem e adicionar mais texto abaixo. Aqui você pode explicar o conteúdo da imagem ou incluir informações adicionais.</p>

@@ -30,6 +30,7 @@ body {
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
 	line-height: 1.7;
+	overflow-x: hidden;
 }
 main {
 	width: 720px;
@@ -66,8 +67,8 @@ main {
 /* Separator line between top and bottom */
 
 #cusdis_thread {
-	margin: 3rem auto;
-	max-width: 800px;
+	max-width:  800px;
+	margin: 1.5rem auto 0;
 }
 #cusdis_thread iframe {
 	display: block;
@@ -126,7 +127,58 @@ input {
 	font-size: 16px;
 }
 table {
-	width: 100%;
+	width: calc(100vw - 2em);
+	margin-left: -1em;
+	display: block;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: 8px;
+	background-color: rgb(var(--gray-light));
+	box-shadow: 0 8px 24px rgba(var(--black), 0.05);
+}
+table::-webkit-scrollbar {
+	height: 8px;
+}
+table::-webkit-scrollbar-thumb {
+	background: rgba(var(--gray-dark), 0.3);
+	border-radius: 999px;
+}
+table thead {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.152);
+}
+table th,
+table td {
+	padding: 0.85rem 1rem;
+	text-align: left;
+	white-space: nowrap;
+}
+table a::after {
+	content: "";
+	background: url("../assets/icons/redirect.svg") no-repeat center;
+	background-size: contain;
+	position: relative;
+	left: 0.55rem;
+	bottom: 0.3rem;
+	filter: brightness(0) saturate(100%) invert(16%) sepia(89%) saturate(4714%) hue-rotate(231deg) brightness(98%) contrast(104%); 
+	display: inline-block;
+	width: 0.9em;
+	height: 0.9em;
+	vertical-align: text-bottom;
+}
+table td:first-of-type {
+	border-right: 1px dotted rgba(0, 0, 0, 0.152);
+}
+table td {
+	font-size: 0.85em;
+}
+table tr:not(:last-child) td {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+table th {
+	font-weight: 700;
+	background: rgba(var(--gray), 0.05);
 }
 img {
 	max-width: 100%;
@@ -162,9 +214,8 @@ hr.separator {
 	margin: 2rem 0 0;
 }
 hr.big-separator {
-	position: absolute;
-	left: 0;
-	margin-top: 1rem;
+	
+	margin: 1rem auto 1.5rem;
 	height: 50px;
 	width: 100vw;
 	background: rgba(0, 0, 0, 0.13)
@@ -196,4 +247,14 @@ hr.big-separator {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+
+/* No seu arquivo global de estilos */
+prose table {
+  display: block;
+  padding: 0.5em;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }

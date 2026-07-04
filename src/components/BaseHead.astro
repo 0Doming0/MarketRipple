@@ -15,7 +15,12 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+
+// Aplica a regra de negócio: se contiver "/blog/", define como "article". Caso contrário, "website".
+const ogType = Astro.url.pathname.includes('/blog/') ? 'article' : 'website';
+
+const { frontmatter } = Astro.props;
+const { title, description, tags, image = FallbackImage } = frontmatter || Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -33,6 +38,7 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta name="generator" content={Astro.generator} />
 
 <Font cssVariable="--font-atkinson" preload />
+<Font cssVariable="--font-space-grotesk" preload />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -40,9 +46,13 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="description" content={description} />
+{tags && <meta name="keywords" content={tags.join(', ')} />}
+
+{tags && tags.map(tag => <meta property="article:tag" content={tag} />)}
+
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

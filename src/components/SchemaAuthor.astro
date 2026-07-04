@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  url: string;
+  image: string;
+  authorName: string;
+  authorLinkedin: string;
+}
+
+const { title, description, pubDate, url, image, authorName, authorLinkedin, authorGitHub } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle", // NewsArticle é muito mais forte para o Discover do que BlogPosting
+  "headline": title,
+  "description": description,
+  "image": [image],
+  "datePublished": pubDate.toISOString(),
+  "dateModified": pubDate.toISOString(),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": url
+  },
+  "author": {
+    "@type": "Person",
+    "name": authorName,
+    "jobTitle": "Software Engineer | Web3 & FinTech Specialist", // Ajuste para sua profissão
+    "sameAs": [
+      authorLinkedin, // O Google usa esse link para cruzar dados e validar sua autoria real
+      authorGitHub
+    ]
+  }
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

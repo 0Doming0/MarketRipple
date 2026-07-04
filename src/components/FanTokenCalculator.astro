@@ -1,0 +1,110 @@
+---
+// Fan Token Return Calculator Component
+// Usage: <FanTokenCalculator /> - Vanilla JS, no client hydration needed
+---
+
+<div id="fan-token-calculator" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 24px; margin: 32px 0; color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+  <h3 style="margin: 0 0 16px 0; font-size: 1.4rem;">💰 Fan Token Return Calculator</h3>
+  
+  <div style="margin-bottom: 20px;">
+    <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem;">Initial Investment (USD)</label>
+    <input 
+      type="number" 
+      id="investmentInput" 
+      placeholder="1000" 
+      value="1000" 
+      min="10" 
+      style="width: 100%; padding: 10px; border: none; border-radius: 6px; font-size: 1rem; box-sizing: border-box; color: #333;"
+    >
+  </div>
+
+  <div style="background: rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 16px; margin-top: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; border-left: 3px solid #fbbf24;">
+        <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">🟢 Conservative (+30%)</div>
+        <div style="font-size: 1.3rem; font-weight: 700;">$<span id="conservative">1300</span></div>
+        <div style="font-size: 0.8rem; opacity: 0.75; margin-top: 4px;">Gain: $<span id="conservativeGain">300</span> (after fees)</div>
+      </div>
+      
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; border-left: 3px solid #60a5fa;">
+        <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">🟡 Realistic (+80%)</div>
+        <div style="font-size: 1.3rem; font-weight: 700;">$<span id="realistic">1800</span></div>
+        <div style="font-size: 0.8rem; opacity: 0.75; margin-top: 4px;">Gain: $<span id="realisticGain">800</span> (after fees)</div>
+      </div>
+    </div>
+
+    <div style="padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; border-left: 3px solid #34d399;">
+      <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 4px;">🔥 Aggressive (+150%)</div>
+      <div style="font-size: 1.3rem; font-weight: 700;">$<span id="aggressive">2500</span></div>
+      <div style="font-size: 0.8rem; opacity: 0.75; margin-top: 4px;">Gain: $<span id="aggressiveGain">1500</span> (after fees)</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; font-size: 0.8rem; opacity: 0.8; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 12px;">
+    <strong>Scenarios based on 2022 data:</strong> Conservative = pre-tournament quiet accumulation. Realistic = 48-hour exit strategy. Aggressive = Nigeria emerging market tokens. <strong>Fees calculated at 0.1% (ByBit maker).</strong>
+  </div>
+</div>
+
+<script define:vars={{}}>
+  // Initialize calculator on page load
+  const initCalculator = () => {
+    const input = document.getElementById('investmentInput');
+    
+    const updateCalculations = () => {
+      const investment = parseFloat(input.value) || 0;
+      const fee = investment * 0.001; // 0.1% maker fee
+      
+      // Scenarios based on 2022 World Cup data
+      const scenarios = {
+        conservative: investment * 0.30,
+        realistic: investment * 0.80,
+        aggressive: investment * 1.50
+      };
+      
+      // Update DOM with calculated values
+      Object.entries(scenarios).forEach(([key, gain]) => {
+        const total = investment + gain - fee;
+        document.getElementById(key).textContent = total.toFixed(0);
+        document.getElementById(key + 'Gain').textContent = (gain - fee).toFixed(0);
+      });
+    };
+    
+    // Event listener for real-time updates
+    if (input) {
+      input.addEventListener('input', updateCalculations);
+      updateCalculations(); // Initial calculation
+    }
+  };
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalculator);
+  } else {
+    initCalculator();
+  }
+</script>
+
+<style>
+  #fan-token-calculator input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  }
+
+  #fan-token-calculator input::placeholder {
+    color: #999;
+  }
+
+  @media (max-width: 640px) {
+    #fan-token-calculator {
+      padding: 16px;
+    }
+
+    #fan-token-calculator h3 {
+      font-size: 1.2rem;
+    }
+
+    #fan-token-calculator div[style*="grid-template-columns"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
