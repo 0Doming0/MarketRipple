@@ -91,18 +91,17 @@ const posts = (await getCollection('blog')).sort(
 		<main>
 			<section>
 				<ul>
-					{
-						{posts.map((post, index) => (
+				
+{posts.map((post, index) => (
     <li>
         <a href={`/blog/${post.id}/`}>
             {post.data.heroImageData && (
                 <Image 
-                    width={post.data.heroImageData.width} 
-                    height={post.data.heroImageData.height} 
+                    width={post.data.heroImageData.width/2} 
+                    height={post.data.height/2} 
                     src={post.data.heroImageData.src} 
                     alt={post.data.title} 
                     quality={70}
-                    /* O primeiro post (index 0) recebe prioridade máxima */
                     loading={index <= 1 ? "eager" : "lazy"}
                     fetchpriority={index <= 1 ? "high" : "auto"}
                 />
@@ -114,7 +113,6 @@ const posts = (await getCollection('blog')).sort(
         </a>
     </li>
 ))}
-					}
 				</ul>
 			</section>
 		</main>
