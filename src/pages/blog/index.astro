@@ -92,19 +92,28 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<ul>
 					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImageData && (
-										<Image width={post.data.heroImageData} height={post.data.heroImageData} src={post.data.heroImageData.src} alt={post.data.heroImageData} />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
+						{posts.map((post, index) => (
+    <li>
+        <a href={`/blog/${post.id}/`}>
+            {post.data.heroImageData && (
+                <Image 
+                    width={post.data.heroImageData.width} 
+                    height={post.data.heroImageData.height} 
+                    src={post.data.heroImageData.src} 
+                    alt={post.data.title} 
+                    quality={70}
+                    /* O primeiro post (index 0) recebe prioridade máxima */
+                    loading={index <= 1 ? "eager" : "lazy"}
+                    fetchpriority={index <= 1 ? "high" : "auto"}
+                />
+            )}
+            <h4 class="title">{post.data.title}</h4>
+            <p class="date">
+                <FormattedDate date={post.data.pubDate} />
+            </p>
+        </a>
+    </li>
+))}
 					}
 				</ul>
 			</section>

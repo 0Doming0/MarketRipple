@@ -37,8 +37,8 @@ const { title, description, tags, image = FallbackImage } = frontmatter || Astro
 />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DXXY0NC5DD"></script>
+<!-- Google tag (gtag.js) 
+<script rel="preconnect" async src="https://www.googletagmanager.com/gtag/js?id=G-DXXY0NC5DD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -46,7 +46,7 @@ const { title, description, tags, image = FallbackImage } = frontmatter || Astro
 
   gtag('config', 'G-DXXY0NC5DD');
 </script>
-
+-->
 <Font cssVariable="--font-atkinson" preload />
 <Font cssVariable="--font-space-grotesk" preload />
 

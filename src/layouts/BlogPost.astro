@@ -130,7 +130,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" />}
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" fetchpriority=high />}
 				</div>
 				
 				<div class="prose">

@@ -59,6 +59,10 @@ export default defineConfig({
     },
 
   vite: {
+    build: {
+      // Injeta qualquer CSS menor que 10kb direto no HTML
+      assetsInlineLimit: 10240, 
+    },
     plugins: [tailwindcss()],
   },
 });
