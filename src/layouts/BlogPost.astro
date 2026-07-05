@@ -32,7 +32,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
             description={description}
             pubDate={pubDate}
             url={postUrl}
-            image={heroImage}
+            image={heroImage.src}
             authorName={authorName}
             authorLinkedin={authorLinkedIn}
 			authorGitHub={authorGitHub} />
@@ -129,7 +129,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1200} height={623} src={heroImage} alt="" />}
+					{heroImage && <Image width={heroImage.width} height={heroImage.height} src={heroImage.src} alt={heroImage.alt} />}
 				</div>
 				
 				<div class="prose">
