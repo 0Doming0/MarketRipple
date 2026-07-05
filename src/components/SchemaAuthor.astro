@@ -1,22 +1,30 @@
 ---
+// Importa o tipo correto se estiver usando a otimização de imagem do Astro
+import type { ImageMetadata } from 'astro';
+
 interface Props {
   title: string;
   description: string;
   pubDate: Date;
   url: string;
-  image: string;
+  image: string | ImageMetadata | any; // Permite string ou o objeto gerado pelo helper image()
   authorName: string;
   authorLinkedin: string;
+  authorGitHub: string; // Adicionado para corrigir o erro de desestruturação
 }
 
 const { title, description, pubDate, url, image, authorName, authorLinkedin, authorGitHub } = Astro.props;
 
+// Trata dinamicamente se a imagem veio como String ou como Objeto do Astro
+const imageUrlString = typeof image === 'string' ? image : image?.src;
+const absoluteImageUrl = imageUrlString ? new URL(imageUrlString, Astro.site).toString() : '';
+
 const schema = {
   "@context": "https://schema.org",
-  "@type": "NewsArticle", // NewsArticle é muito mais forte para o Discover do que BlogPosting
+  "@type": "NewsArticle", 
   "headline": title,
   "description": description,
-  "image": [image],
+  "image": absoluteImageUrl ? [absoluteImageUrl] : [],
   "datePublished": pubDate.toISOString(),
   "dateModified": pubDate.toISOString(),
   "mainEntityOfPage": {
@@ -26,13 +34,14 @@ const schema = {
   "author": {
     "@type": "Person",
     "name": authorName,
-    "jobTitle": "Software Engineer | Web3 & FinTech Specialist", // Ajuste para sua profissão
+    "jobTitle": "Software Engineer | Web3 & FinTech Specialist", 
     "sameAs": [
-      authorLinkedin, // O Google usa esse link para cruzar dados e validar sua autoria real
+      authorLinkedin, 
       authorGitHub
     ]
   }
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+{/* O uso do is:inline garante que o Astro não tente processar o JSON como script de cliente */}
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
