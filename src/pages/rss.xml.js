@@ -10,6 +10,7 @@ export async function GET(context) {
 		site: context.site,
 		items: posts.map((post) => ({
 			...post.data,
+			customData: `<heroImage>${post.data.heroImage}</heroImage>`,
 			link: `/blog/${post.id}/`,
 		})),
 	});
