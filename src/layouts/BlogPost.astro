@@ -8,19 +8,21 @@ import Header from '../components/Header.astro';
 import { authorName, authorLinkedIn, authorGitHub } from '../consts'
 import SchemaAuthor from '../components/SchemaAuthor.astro'
 
+
+
 import Comments from '../components/Comments.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, categories, tags, lang, postUrl, pubDate, updatedDate, heroImage, commentCTA } = Astro.props;
+const { title, description, categories, tags, lang, postUrl, pubDate, updatedDate, heroImageData, heroImage, commentCTA } = Astro.props;
 const titleLength = title.length;
 const minFontSize = 1.5;
 const maxFontSize = 3.2;
 const inverseRatio = 1 - Math.min(Math.max(titleLength / 80, 0), 1);
 const adaptiveSize = minFontSize + inverseRatio * (maxFontSize - minFontSize);
 const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}rem`;
-
+console.log (heroImageData.src)
 ---
 
 <html lang={lang}>
@@ -32,7 +34,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
             description={description}
             pubDate={pubDate}
             url={postUrl}
-            image={heroImage.src}
+            image={heroImageData.src}
             authorName={authorName}
             authorLinkedin={authorLinkedIn}
 			authorGitHub={authorGitHub} />
@@ -129,7 +131,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={heroImage.width} height={heroImage.height} src={heroImage.src} alt={heroImage.alt} />}
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" />}
 				</div>
 				
 				<div class="prose">

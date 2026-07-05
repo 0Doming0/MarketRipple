@@ -1,17 +1,138 @@
 ---
+import { Image } from 'astro:assets'; // CORREÇÃO: Importação obrigatória para otimização de imagens
 import AboutHeroImage from '../assets/Gemini_Generated_Image_lelaexlelaexlela.png';
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro'; 
+
+const title = "About Market Ripple News";
+const description = "Discover how global financial events create worldwide ripple effects. Explore the hidden connections between elite wealth, macro-finance, and Web3.";
+const pubDate = new Date('June 27 2026');
+const updatedDate = null;
+const TitleSize = "2.5rem";
+
+// Forma correta: passando o objeto importado para herdar dimensões reais
+const heroImageData = { 
+  width: 1600, 
+  height: 900, 
+  src: '../assets/Gemini_Generated_Image_lelaexlelaexlela.png', // Usando a variável importada, não a string de caminho
+  alt: "community of investors" 
+};
+
+const heroImage = AboutHeroImage;
 ---
-
-<Layout
-	title="About Market Ripple News"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('June 27 2026')}
-	heroImage={AboutHeroImage}
->
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+	main {
+		width: 100%;
+		max-width: 960px; /* Melhor prática para responsividade */
+		margin: 0 auto;
+	}
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	/* CORREÇÃO 1: Definir tamanho fixo para os cards comuns ficarem lado a lado (2 por linha) */
+	ul li {
+		width: calc(50% - 1rem); /* 50% menos a metade do gap */
+	}
 	
+	ul li * {
+		text-decoration: none;
+		transition: 0.2s ease;
+	}
 
-Financial ecosystems don't move in a vacuum. A single regulatory shift, a sudden move by a crypto whale, or a strategic play by a billionaire tech mogul creates an immediate, global chain reaction. 
+	/* CORREÇÃO 2: Primeiro item ocupa a linha toda e reseta alinhamentos */
+	ul li:first-child {
+		width: 100%;
+		margin-bottom: 1rem; /* Margem controlada para separar da linha de baixo */
+		text-align: left; /* Mudar para left ou manter center se quiser tudo centralizado */
+	}
+
+	/* CORREÇÃO 3: Forçar as imagens a se comportarem como bloco para matar o espaço fantasma */
+	ul li img {
+		display: block; 
+		width: 100%; /* Garante que todas as imagens preencham seus respectivos li */
+		height: auto;
+		margin-bottom: 0.5rem;
+		border-radius: 12px;
+	}
+
+	ul li:first-child img {
+		width: 100%;
+	}
+	ul li:first-child .title {
+		font-size: 2.369rem;
+	}
+	ul li a {
+		display: block;
+	}
+	.title {
+		margin: 0;
+		color: rgb(var(--black));
+		line-height: 1.2; /* Um pouco mais de respiro para títulos longos */
+	}
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+	}
+	ul li a:hover h4,
+	ul li a:hover .date {
+		color: rgb(var(--accent));
+	}
+	ul a:hover img {
+		box-shadow: var(--box-shadow);
+	}
+
+	/* Responsivo Mobile */
+	@media (max-width: 720px) {
+		ul {
+			gap: 1.5rem; /* Ajustado para melhor toque no mobile */
+		}
+		ul li {
+			width: 100%; /* No mobile, todos viram lista vertical cheia */
+			text-align: left;
+		}
+		ul li:first-child {
+			margin-bottom: 0;
+		}
+		ul li:first-child .title {
+			font-size: 1.563em;
+		}
+	}
+</style>
+	</head>
+<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImage} alt={heroImageData.alt} loading="eager" />}
+				</div>
+        <div class="title">
+						<div class="date">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+            <br>
+						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
+						<hr /><br>
+					</div>
+
+          Financial ecosystems don't move in a vacuum. A single regulatory shift, a sudden move by a crypto whale, or a strategic play by a billionaire tech mogul creates an immediate, global chain reaction. 
 
 At <strong>Market Ripple News</strong>, we track these precise waves. We break down the hidden connections between elite wealth, traditional macro-finance, and the evolving Web3 economy, translating complex global events into digestible, high-impact stories.
 <br><br>
@@ -39,7 +160,7 @@ Content in the financial and crypto space falls under Google’s strictest <stro
   <li><strong>Information Gain:</strong> Every article published on our platform aims to provide unique commentary, data visualizations, or an angle not found on standard mainstream media outlets.</li>
   <li><strong>Transparency:</strong> Our research relies on public market data, blockchain analytics, and institutional financial reporting to ensure the highest analytical standards.</li>
 </ul>
-<hr class = 'big-separator'>
+<hr style="margin-left: -1em" class = 'big-separator '>
 <br><br><br>
 <h3> Meet the Creator </h3>
 
@@ -48,4 +169,8 @@ A <code>software developer and tech enthusiast</code> fascinated by the intersec
 digital assets, and data analysis. Driven by a passion for uncovering the hidden patterns behind 
 elite wealth and market shifts, they built Market Ripple News to translate complex global financial ripples 
 into clear, high-impact stories for the modern internet user.
-</Layout>
+
+      </article>
+    </main>
+</body>
+</html>
