@@ -7,6 +7,7 @@ Allow: /
 # Evita o desperdício de rastreamento (Crawl Budget) em páginas de busca interna ou APIs locais
 Disallow: /search
 Disallow: /api/
+Disallow: /go/
 
 # Aponta o caminho absoluto do seu sitemap gerado pelo @astrojs/sitemap
 Sitemap: https://marketripple.com/sitemap-index.xml

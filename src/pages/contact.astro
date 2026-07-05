@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import ContactHeroImage from '../assets/Gemini_Generated_Image_lelaexlelaexlela.png'; // Mantendo consistência do asset
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = "Contact Us - Market Ripple News";
+const description = "Get in touch with Market Ripple News. Reach out for editorial inquiries, Web3 data partnerships, or corporate feedback.";
+const updatedDate = new Date('July 05 2026');
+const TitleSize = "2.5rem";
+
+const heroImageData = { 
+  width: 1600, 
+  height: 900, 
+  src: '../assets/Gemini_Generated_Image_lelaexlelaexlela.png',
+  alt: "Contact and corporate communication hub concept" 
+};
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+	main {
+		width: 100%;
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 1rem;
+	}
+	.title {
+		margin: 0;
+		color: rgb(var(--black));
+		line-height: 1.2;
+	}
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.9rem;
+	}
+	.contact-card {
+		background: #111827; /* Fundo escuro sofisticado coerente com o tema */
+		border: 1px solid #1f2937;
+		padding: 2rem;
+		border-radius: 12px;
+		margin: 2rem 0;
+	}
+	.contact-card h3 {
+		color: #10b981; /* Verde esmeralda planejado */
+		margin-top: 0;
+	}
+	.contact-link {
+		color: #fff;
+		text-decoration: underline;
+		font-weight: 600;
+	}
+	.contact-link:hover {
+		color: #10b981;
+	}
+	ul {
+		list-style-type: square;
+		margin: 1rem 0 2rem 2rem;
+		padding: 0;
+	}
+	ul li {
+		color: rgb(var(--black));
+		line-height: 1.6;
+		margin-bottom: 0.5rem;
+	}
+</style>
+	</head>
+<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={ContactHeroImage} alt={heroImageData.alt} loading="eager" />}
+				</div>
+        <div class="title">
+            <br>
+						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
+						<p class="date">Verified Network Channel | Updated: {updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+						<hr /><br>
+					</div>
+
+<p>Thank you for following <strong>Market Ripple News</strong>. Whether you are an institutional researcher, a Web3 developer, an exchange affiliate manager, or a reader looking for data clarifications, we value your communication.</p>
+<p>To maintain maximum site performance and eliminate malicious tracking scripts, we do not utilize dynamic contact forms. Instead, you can reach our team and management directly through our verified digital channels below.</p>
+
+<div class="contact-card">
+	<h3>Official Editorial Desk</h3>
+	<p style="color: #9ca3af;">For market tips, information gain breakdowns, correction requests, and advertising inquiries:</p>
+	<p style="font-size: 1.2rem; margin-bottom: 0;">
+		📩 <span style="color: #9ca3af;">Email:</span> <a href="mailto:contact@marketripplenews.com" class="contact-link">contact@marketripplenews.com</a>
+	</p>
+</div>
+<br>
+
+<h2>Communication Guidelines</h2>
+<p>To help us manage high volumes of global market data feeds efficiently, please categorize your outreach based on the following frameworks:</p>
+<ul>
+  <li><strong>Press Releases & Web3 Protocols:</strong> Include full whitepaper links, verified GitHub repositories, and direct smart contract addresses if you are requesting a localized analysis for the Nigerian or West African crypto markets.</li>
+  <li><strong>Affiliate & Commercial Partnerships:</strong> For cryptocurrency exchanges, localized fintech gateways, or hardware wallet integrations, ensure your referral tiers and terms comply with our strict transparency mandates outlined in our Terms of Service.</li>
+  <li><strong>Data Corrections:</strong> If you find any discrepancy in our on-chain metrics, macro-economic charts, or whale tracker data, provide the exact transaction hash (TxID) or official economic source link.</li>
+</ul>
+<br>
+
+<h2>Administrative Office</h2>
+<h3>Vitor Domingos</h3>
+<p style="margin-top: -0.5rem; color: rgb(var(--gray));">Founder & Platform Architecture Lead</p>
+<p>For administrative or technical inquiries regarding our Astro/Cloudflare deployment infrastructure, you can sync directly via our secure developer environments and global networks.</p>
+
+			</article>
+		</main>
+		<Footer />
+</body>
+</html>

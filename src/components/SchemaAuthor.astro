@@ -39,6 +39,22 @@ const schema = {
       authorLinkedin, 
       authorGitHub
     ]
+  },
+  "publisher": {
+    "@type": "NewsMediaOrganization", // Define seu blog como um veículo sério de mídia
+    "name": "Market Ripple News", // Nome do seu blog
+    "url": Astro.site.origin,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${Astro.site.origin}/favicon.ico` // Seu logotipo quadrado estruturado
+    },
+    "sameAs": [
+      "https://marketripplenews.com/about",
+      "https://marketripplenews.com/privacy-policy",
+      "https://marketripplenews.com/contact",
+      "https://marketripplenews.com/terms-of-service",
+
+    ]
   }
 };
 ---

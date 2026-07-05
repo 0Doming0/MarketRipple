@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets'; // Importação obrigatória para otimização de imagens
+import AboutHeroImage from '../assets/Gemini_Generated_Image_lelaexlelaexlela.png'; // Mantendo a consistência visual
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = "Terms of Service - Market Ripple News";
+const description = "Review the Terms of Service for Market Ripple News. Learn about our content disclaimers, informational nature, and user guidelines for macro-finance and Web3 analytics.";
+const pubDate = new Date('June 27 2026');
+const updatedDate = new Date('July 05 2026');
+const TitleSize = "2.5rem";
+
+const heroImageData = { 
+  width: 1600, 
+  height: 900, 
+  src: '../assets/Gemini_Generated_Image_lelaexlelaexlela.png',
+  alt: "Financial regulation and terms agreement concept" 
+};
+
+const heroImage = AboutHeroImage;
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+	main {
+		width: 100%;
+		max-width: 960px; /* Melhor prática para responsividade */
+		margin: 0 auto;
+		padding: 1rem;
+	}
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		list-style-type: disc;
+		margin: 1rem 0 2rem 2rem;
+		padding: 0;
+	}
+	ul li {
+		width: 100%; /* Formato de lista de termos */
+		color: rgb(var(--black));
+		line-height: 1.6;
+	}
+	
+	ul li * {
+		text-decoration: none;
+	}
+
+	ul li img {
+		display: block; 
+		width: 100%; 
+		height: auto;
+		margin-bottom: 0.5rem;
+		border-radius: 12px;
+	}
+
+	.title {
+		margin: 0;
+		color: rgb(var(--black));
+		line-height: 1.2;
+	}
+	.date {
+		margin: 0;
+		color: rgb(var(--gray));
+		font-size: 0.9rem;
+	}
+
+	/* Responsivo Mobile */
+	@media (max-width: 720px) {
+		ul {
+			gap: 0.5rem;
+		}
+	}
+</style>
+	</head>
+<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImage} alt={heroImageData.alt} loading="eager" />}
+				</div>
+        <div class="title">
+            <br>
+						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
+						<p class="date">Last Updated: {updatedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+						<hr /><br>
+					</div>
+
+<p>Welcome to <strong>Market Ripple News</strong>. By accessing or using our website, you agree to comply with and be bound by the following Terms of Service. Please read these terms carefully before navigating our platform.</p>
+<br>
+
+<h2>1. Acceptance of Terms</h2>
+<p>By accessing the content, tools, and analytical feeds provided on Market Ripple News, you acknowledge that you have read, understood, and agreed to these Terms of Service, as well as our Privacy Policy. If you do not agree to any part of these terms, you must discontinue using this platform immediately.</p>
+<br>
+
+<h2>2. Strict Financial Disclaimer (Not Financial Advice)</h2>
+<p>Market Ripple News is strictly an educational, informational, and analytical platform. </p>
+<ul>
+  <li><strong>No Investment Decisions:</strong> Content published here—including macro trends, Web3 news, blockchain metrics, and whale wallet trackers—does not constitute financial, investment, trading, or legal advice.</li>
+  <li><strong>High Risk:</strong> Cryptocurrency markets, digital assets, and traditional financial derivatives are subject to extreme volatility and risk. You are entirely responsible for conducting your own research (DYOR) before committing capital.</li>
+  <li><strong>No Liability:</strong> Under no circumstances will Market Ripple News, its founder Vitor Domingos, or its affiliates be held responsible for any direct, indirect, or consequential financial losses, damages, or liquidations resulting from your interpretation or use of our data.</li>
+</ul>
+<br>
+
+<h2>3. Commercial Disclosure & Sponsored Links</h2>
+<p>In accordance with transparency guidelines, users must be aware of how our platform sustains its operations:</p>
+<ul>
+  <li><strong>Affiliate Routing:</strong> Market Ripple News utilizes internal redirect paths and localized links to direct users to official cryptocurrency exchanges, hardware wallet providers, and fintech platforms. </li>
+  <li><strong>Monetization Structure:</strong> Clicking these links, participating in referral programs, or engaging with programmatic advertisements (such as Google AdSense) may generate a financial commission for the platform.</li>
+  <li><strong>Independence:</strong> Commercial partnerships never influence our raw data analysis, information gain criteria, or independent economic commentary.</li>
+</ul>
+<br>
+
+<h2>4. Intellectual Property Rights</h2>
+<p>Unless otherwise stated, Market Ripple News and/or its licensors own the intellectual property rights for all original content, custom data visualizations, and proprietary summaries published on the site. All intellectual property rights are reserved.</p>
+<p>You may access this content for your personal use, but you are strictly prohibited from:</p>
+<ul>
+  <li>Republishing whole articles or raw code blocks without explicit written consent.</li>
+  <li>Selling, renting, or sub-licensing material from Market Ripple News.</li>
+  <li>Using automated scraping tools to extract our financial feeds for competing commercial networks.</li>
+</ul>
+<br>
+
+<h2>5. Third-Party External Links</h2>
+<p>Our analytical pieces frequently point to external networks—including decentralized applications (dApps), live coin-tracking markets, and global institutional databases. We have no control over the nature, security, or changes of these third-party domains. Linking to them does not imply a blind endorsement of their current or future terms.</p>
+<br>
+
+<h2>6. Modifications of Service</h2>
+<p>We reserve the right to modify, suspend, or discontinue any aspect of the blog's architecture, feed distribution, or access layout at any time without notice. We are not liable to you or any third party for any technical downtime, server transition, or temporary algorithmic adjustments.</p>
+<br>
+
+<h2>7. Governing Law</h2>
+<p>These terms and conditions are governed by and construed in accordance with international digital standard frameworks and the relevant jurisdiction of the platform's administration, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+
+<hr style="margin-left: -1em" class='big-separator'>
+<br><br>
+<h3>Compliance & Administration</h3>
+<h2>Vitor Domingos</h2> 
+<h1>Founder & Tech Lead | Market Ripple News</h1>
+<p>Thank you for being part of our global financial intelligence community. This documentation ensures an open, protected, and fully compliant distribution network for high-performance static Web3 media.</p>
+
+			</article>
+		</main>
+        <Footer />
+</body>
+</html>

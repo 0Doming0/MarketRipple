@@ -43,7 +43,7 @@ const carouselId = Math.random().toString(36).substring(7);
     <div class="carousel-track" data-track={carouselId}>
       {items.map((item, index) => (
         <div class="carousel-slide" data-slide-index={index}>
-          <a href={item.link} target="_blank" rel="noopener noreferrer" class="carousel-link" title={item.title || item.altText}>
+          <a href={item.link} target="_blank" rel="sponsored noopener noreferrer" class="carousel-link" title={item.title || item.altText}>
             {typeof item.image === 'string' ? (
               <img 
                 src={item.image}

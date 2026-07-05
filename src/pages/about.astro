@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets'; // CORREÇÃO: Importação obrigatória para otimização de imagens
 import AboutHeroImage from '../assets/Gemini_Generated_Image_lelaexlelaexlela.png';
 import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro'; 
 
@@ -117,16 +118,6 @@ const heroImage = AboutHeroImage;
 					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImage} alt={heroImageData.alt} loading="eager" />}
 				</div>
         <div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
             <br>
 						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
 						<hr /><br>
@@ -172,5 +163,6 @@ into clear, high-impact stories for the modern internet user.
 
       </article>
     </main>
+    <Footer />
 </body>
 </html>
