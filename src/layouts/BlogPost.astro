@@ -7,7 +7,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { authorName, authorLinkedIn, authorGitHub } from '../consts'
 import SchemaAuthor from '../components/SchemaAuthor.astro'
-
+import AuthorBox from '../components/AuthorBox.astro'
 
 
 import Comments from '../components/Comments.astro';
@@ -159,6 +159,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
 						<hr />
 					</div>
+					<AuthorBox />
 					<slot />
 				</div>
 			</article>

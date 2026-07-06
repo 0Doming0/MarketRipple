@@ -1,18 +1,10 @@
 ---
 interface Props {
-  name: string;
   bio?: string;
-  linkedin?: string;
-  github?: string;
-  twitter?: string;
 }
-
+import { authorName, authorLinkedIn, authorGitHub, authorTwitter } from '../consts'
 const { 
-  name, 
-  bio = "Desenvolvedor e especialista de mercado na MarketRipple, analisando dados on-chain, tendências de criptomoedas e ecossistemas financeiros.", 
-  linkedin, 
-  github,
-  twitter 
+  bio = "Developer and market specialist at Market Ripple News, analyzing on-chain data, cryptocurrency trends, and financial ecosystems..",  
 } = Astro.props;
 ---
 
@@ -21,14 +13,14 @@ const {
     
     {/* Avatar / Iniciais do Autor */}
     <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-950 border border-emerald-500/20 text-emerald-400 font-bold text-lg shadow-sm shadow-emerald-500/10">
-      {name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+      {authorName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
     </div>
     
     {/* Informações */}
     <div class="space-y-2">
       <div>
         <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Escrito por</span>
-        <h3 class="text-base font-bold text-zinc-100 mt-0.5">{name}</h3>
+        <h3 class="text-base font-bold text-zinc-100 mt-0.5">{authorName}</h3>
       </div>
       
       <p class="text-sm text-zinc-400 leading-relaxed max-w-2xl">
@@ -37,18 +29,18 @@ const {
       
       {/* Redes Sociais de Validação (Crucial para E-E-A-T) */}
       <div class="flex justify-center sm:justify-start gap-3 pt-1 text-xs text-zinc-500">
-        {linkedin && (
-          <a href={linkedin} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
+        {authorLinkedIn && (
+          <a href={authorLinkedIn} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
             <span>LinkedIn</span> ↗
           </a>
         )}
-        {github && (
-          <a href={github} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
+        {authorGitHub && (
+          <a href={authorGitHub} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
             <span>GitHub</span> ↗
           </a>
         )}
-        {twitter && (
-          <a href={twitter} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
+        {authorTwitter && (
+          <a href={authorTwitter} target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
             <span>X / Twitter</span> ↗
           </a>
         )}

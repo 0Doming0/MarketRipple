@@ -8,4 +8,5 @@ export const SITE_IMAGE = 'https://marketripplenews.com/og-image.png';
 export const authorName = 'Vitor Domingos de Souza';
 export const authorLinkedIn = 'https://www.linkedin.com/in/vitor-souza-souza-a181012b1/';
 export const authorGitHub = 'https://github.com/0Doming0/';
+export const authorTwitter = 'https://x.com/MarketRippleNew';
 export const telegram_api_token = '8946911951:AAHibgZdzxvsKeFctduDL5-nENwRfo_Wjho';
