@@ -159,11 +159,12 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 						<h1 style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
 						<hr />
 					</div>
-					<AuthorBox />
+					
 					<slot />
 				</div>
 			</article>
 		</main>
+		<AuthorBox />
         <hr class = 'big-separator'>
         <section class="comment-cta">
           <div class="comment-cta-box">
