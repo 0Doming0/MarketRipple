@@ -248,7 +248,16 @@ hr.big-separator {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
-
+ul.list-square {
+	list-style-type: square;
+	margin: 1rem 0 2rem 2rem;
+	padding: 0;
+}
+ul.list-square li {
+	color: rgb(var(--black));
+	line-height: 1.6;
+	margin-bottom: 0.5rem;
+}
 
 /* No seu arquivo global de estilos */
 prose table {

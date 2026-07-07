@@ -4,7 +4,7 @@ interface Props {
 }
 import { Image } from 'astro:assets';
 import { authorName, authorLinkedIn, authorGitHub, authorTwitter } from '../consts'
-import ImageProfile from '../assets/1782849625016.png'
+import ImageProfile from '../assets/imagePerfil.png'
 const { 
   bio = "Developer and market specialist at Market Ripple News, analyzing on-chain data, cryptocurrency trends, and financial ecosystems..",  
 } = Astro.props;
@@ -15,7 +15,7 @@ const {
     
     {/* Avatar / Iniciais do Autor */}
     <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-950 border border-emerald-500/20 text-emerald-400 font-bold text-lg shadow-sm shadow-emerald-500/10">
-      {ImageProfile && <Image class="rounded-full" width={ImageProfile.width} height={ImageProfile.height} src={ImageProfile.src} alt="Author" />}
+      {ImageProfile && <Image class="rounded-full" width={ImageProfile.width} height={ImageProfile.height} src={ImageProfile} alt="Author" />}
     </div>
     
     {/* Informações */}

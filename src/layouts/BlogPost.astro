@@ -22,6 +22,7 @@ const maxFontSize = 3.2;
 const inverseRatio = 1 - Math.min(Math.max(titleLength / 80, 0), 1);
 const adaptiveSize = minFontSize + inverseRatio * (maxFontSize - minFontSize);
 const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}rem`;
+console.log (heroImageData)
 ---
 
 <html lang={lang}>
@@ -130,7 +131,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" fetchpriority=high />}
+					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" fetchpriority="high" />}
 				</div>
 				
 				<div class="prose">
