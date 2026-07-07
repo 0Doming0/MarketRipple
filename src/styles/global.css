@@ -88,17 +88,20 @@ h6 {
 	
 	line-height: 1.2;
 }
-h1 {
+h1.title {
 	font-size: 2.552em;
 }
+h1:not(.title) {
+  font-size: 1.8em;
+}
 h2 {
-	font-size: 1.741em;
+	font-size: 1.441em;
 }
 h3 {
-	font-size: 1.253em;
+	font-size: 1.053em;
 }
 h4 {
-	font-size: 0.763em;
+	font-size: 0.663em;
 }
 h5 {
 	font-size: 0.45em;
