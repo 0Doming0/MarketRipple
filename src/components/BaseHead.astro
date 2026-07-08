@@ -11,6 +11,7 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	lang?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -20,7 +21,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogType = Astro.url.pathname.includes('/blog/') ? 'article' : 'website';
 
 const { frontmatter } = Astro.props;
-const { title, description, tags, image = FallbackImage } = frontmatter || Astro.props;
+const { title, description, tags, image = FallbackImage, lang = "en" } = frontmatter || Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -60,6 +61,7 @@ const { title, description, tags, image = FallbackImage } = frontmatter || Astro
 
 {tags && tags.map(tag => <meta property="article:tag" content={tag} />)}
 
+<link rel="hreflang" href={canonicalURL} hreflang={lang} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={ogType} />
