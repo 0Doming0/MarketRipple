@@ -10,4 +10,4 @@ Disallow: /api/
 Disallow: /go/
 
 # Aponta o caminho absoluto do seu sitemap gerado pelo @astrojs/sitemap
-Sitemap: https://marketripple.com/sitemap-index.xml
+Sitemap: https://www.marketripple.com/sitemap-index.xml

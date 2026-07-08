@@ -10,7 +10,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://marketripplenews.com',
+  site: 'https://www.marketripplenews.com',
   output: 'static',
   adapter: vercel(),
   integrations: [mdx(), sitemap()],
