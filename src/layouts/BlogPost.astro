@@ -60,7 +60,7 @@ console.log (heroImageData)
 				position: relative;
 				
 				margin: 0 auto;
-				border-radius: 8px;
+				border-radius: 4px;
 				box-shadow: var(--box-shadow);
 				max-width: 100%;
 				height: auto;
@@ -73,7 +73,7 @@ console.log (heroImageData)
 				border: 2px;
 			}
 			.title {
-				margin-bottom: 1em;
+				margin-bottom: 0.5em;
 				padding: 1em 0;
 				text-align: center;
 				line-height: 1;
@@ -130,6 +130,23 @@ console.log (heroImageData)
 		<Header />
 		<main>
 			<article>
+			    <div class="title">
+					<div class="date">
+						<FormattedDate date={pubDate} />
+						{
+							updatedDate && (
+								<div class="last-updated-on">
+									Last updated on <FormattedDate date={updatedDate} />
+								</div>
+							)
+						}
+					</div>
+					<h1 class=".title" style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
+					
+				</div>
+				<p class = 'ml-[1em] description text-gray-600'>{description}</p>
+				<hr class = 'ml-[1em]' />
+				<br>
 				<div class="hero-image">
 					{heroImageData && <Image width={heroImageData.width} height={heroImageData.height} src={heroImageData.src} alt={heroImageData.alt} loading="eager" fetchpriority="high" />}
 				</div>
@@ -146,20 +163,7 @@ console.log (heroImageData)
   </div>
 )}
 				    </div>
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1 class=".title" style={{ fontSize: TitleSize, fontWeight: '700' }}>{title}</h1>
-						<hr />
-					</div>
+					
 					
 					<slot />
 				</div>

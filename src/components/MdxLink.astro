@@ -1,0 +1,15 @@
+---
+// src/components/MdxLink.astro
+const { href, ...props } = Astro.props;
+
+// Verifica se é um link externo ou de afiliado (como o seu /go/)
+const isExternal = href?.startsWith('http') || href?.includes('/go/');
+---
+
+{isExternal ? (
+  <a href={href} rel="sponsored noopener noreferrer" target="_blank" {...props}>
+    <slot />
+  </a>
+) : (
+  <a href={href} {...props}><slot /></a>
+)}
