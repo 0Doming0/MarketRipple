@@ -1,8 +1,29 @@
 ---
 const currentYear = new Date().getFullYear();
+
+interface Props {
+  sources?: Array<{ title: string; url: string }>;
+}
+
+const { sources } = Astro.props;
 ---
 
-<footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-12 px-6">
+<footer class="site-footer bg-slate-900 text-slate-400 border-t border-slate-800 py-12 px-6">
+  {sources && sources.length > 0 && (
+    <div class="sources-section class-dark-theme-esmeralda">
+      <h3 class="text-lg font-bold text-white mb-2">📊 Sources and Factual Data</h3>
+      <ul class="space-y-1 text-sm text-gray-400">
+        {sources.map(source => (
+          <li>
+            <a href={source.url} rel="dofollow" target="_blank" class="hover:text-emerald-300 underline">
+              {source.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+  <br>
   <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
     
     <div>

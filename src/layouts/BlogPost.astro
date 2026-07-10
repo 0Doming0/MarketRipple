@@ -16,7 +16,7 @@ import NewsletterBox from '../components/NewsletterBox.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, categories, tags, lang, postUrl, pubDate, updatedDate, heroImageData, heroImage, commentCTA } = Astro.props;
+const { title, description, categories, tags, lang, postUrl, sources, pubDate, updatedDate, heroImageData, heroImage, commentCTA } = Astro.props;
 const titleLength = title.length;
 const minFontSize = 1.5;
 const maxFontSize = 3.2;
@@ -186,7 +186,7 @@ const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}
 		-->
 		<RelatedPosts currentSlug={postUrl} currentTags={tags} />
 		<NewsletterBox />
-		<Footer />
+		<Footer sources={sources} />
 		<!--
 		<script is:inline>
   // Usamos is:inline para garantir que o Astro não processe ou mova este script de inicialização rápida
