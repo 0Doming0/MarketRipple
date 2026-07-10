@@ -9,6 +9,7 @@ import { authorName, authorLinkedIn, authorGitHub } from '../consts'
 import SchemaAuthor from '../components/SchemaAuthor.astro'
 import AuthorBox from '../components/AuthorBox.astro'
 
+import RelatedPosts from '../components/RelatedPosts.astro';
 
 import Comments from '../components/Comments.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
@@ -22,7 +23,7 @@ const maxFontSize = 3.2;
 const inverseRatio = 1 - Math.min(Math.max(titleLength / 80, 0), 1);
 const adaptiveSize = minFontSize + inverseRatio * (maxFontSize - minFontSize);
 const TitleSize = `${Math.min(maxFontSize, Math.max(minFontSize, adaptiveSize))}rem`;
-console.log (heroImageData)
+
 ---
 
 <html lang={lang}>
@@ -171,17 +172,19 @@ console.log (heroImageData)
 		</main>
 		<AuthorBox />
         <hr class = 'big-separator'>
+		<!--
         <section class="comment-cta">
           <div class="comment-cta-box">
             <p class="comment-cta-text" set:html={commentCTA}></p>
             
           </div>
         </section>
-
+		
         <div id="comment-section">
           <Comments />
         </div>
-
+		-->
+		<RelatedPosts currentSlug={postUrl} currentTags={tags} />
 		<NewsletterBox />
 		<Footer />
 		<!--
