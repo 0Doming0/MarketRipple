@@ -6,6 +6,8 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro'; 
 
+import default_logo from '../../assets/default-logo.jpg'
+
 const title = "About Market Ripple News";
 const description = "Discover how global financial events create worldwide ripple effects. Explore the hidden connections between elite wealth, macro-finance, and Web3.";
 const pubDate = new Date('June 27 2026');
@@ -25,7 +27,7 @@ const heroImage = AboutHeroImage;
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} image={default_logo} />
 		<style>
 	main {
 		width: 100%;
