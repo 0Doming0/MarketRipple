@@ -1,0 +1,425 @@
+---
+interface Props {
+  id?: string;
+  title?: string;
+  defaultCurrency?: 'usd' | 'brl';
+  locale?: string;
+}
+
+const {
+  id = 'bitcoin-calculator',
+  title = 'Bitcoin investment calculator',
+  defaultCurrency = 'usd',
+  locale = 'en-US',
+} = Astro.props;
+
+const calculatorId = id;
+---
+
+<section class="btc-calculator" id={calculatorId} data-locale={locale}>
+  <div class="calculator-heading">
+    <span class="eyebrow">BTC RETURN SIMULATOR</span>
+    <h2>{title}</h2>
+    <p>See what a past Bitcoin investment could be worth today.</p>
+  </div>
+
+  <form class="calculator-form">
+    <label>
+      Initial investment
+      <span class="money-input">
+        <span data-currency-symbol>$</span>
+        <input name="amount" type="number" min="1" step="any" value="1000" inputmode="decimal" required />
+      </span>
+    </label>
+
+    <label>
+      Currency
+      <select name="currency">
+        <option value="usd" selected={defaultCurrency === 'usd'}>USD — US Dollar</option>
+        <option value="brl" selected={defaultCurrency === 'brl'}>BRL — Brazilian Real</option>
+      </select>
+    </label>
+
+    <label>
+      Investment date
+      <input name="startDate" type="date" required />
+    </label>
+
+    <button type="submit">Calculate return</button>
+  </form>
+
+  <p class="status" role="status" aria-live="polite"></p>
+
+  <div class="results" hidden>
+    <div class="result-card primary">
+      <span>Estimated value today</span>
+      <strong data-result="currentValue">—</strong>
+    </div>
+    <div class="result-card">
+      <span>Bitcoin acquired</span>
+      <strong data-result="btcAmount">—</strong>
+    </div>
+    <div class="result-card">
+      <span>Total profit / loss</span>
+      <strong data-result="profit">—</strong>
+    </div>
+    <div class="result-card">
+      <span>Total return</span>
+      <strong data-result="return">—</strong>
+    </div>
+    <div class="price-summary">
+      <span>BTC on investment date: <b data-result="historicalPrice">—</b></span>
+      <span>BTC now: <b data-result="currentPrice">—</b></span>
+    </div>
+    <button class="share-button" type="button">Copy result</button>
+  </div>
+
+  <p class="disclaimer">
+    Estimates exclude fees, spreads and taxes. Past performance does not guarantee future results.
+    Price data by CoinGecko.
+  </p>
+</section>
+
+<script define:vars={{ calculatorId }}>
+  function initializeBitcoinCalculator() {
+    const root = document.getElementById(calculatorId);
+
+    if (!root || root.dataset.initialized === 'true') {
+      return;
+    }
+
+    root.dataset.initialized = 'true';
+
+    const form = root.querySelector('.calculator-form');
+    const status = root.querySelector('.status');
+    const results = root.querySelector('.results');
+    const submitButton = form?.querySelector('button[type="submit"]');
+    const dateInput = form?.elements.namedItem('startDate');
+    const amountInput = form?.elements.namedItem('amount');
+    const currencyInput = form?.elements.namedItem('currency');
+    const symbol = root.querySelector('[data-currency-symbol]');
+    const shareButton = root.querySelector('.share-button');
+
+    if (
+      !form ||
+      !status ||
+      !results ||
+      !submitButton ||
+      !(dateInput instanceof HTMLInputElement) ||
+      !(amountInput instanceof HTMLInputElement) ||
+      !(currencyInput instanceof HTMLSelectElement) ||
+      !symbol ||
+      !shareButton
+    ) {
+      console.error('Bitcoin calculator elements were not found.');
+      return;
+    }
+
+    /*
+     * CoinGecko Demo permite somente os últimos 365 dias.
+     * Usamos 364 dias para evitar problemas de horário e UTC.
+     */
+    const today = new Date();
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const earliestAllowedDate = new Date(today);
+    earliestAllowedDate.setDate(earliestAllowedDate.getDate() - 364);
+
+    const defaultDate = new Date(today);
+    defaultDate.setMonth(defaultDate.getMonth() - 6);
+
+    const toDateString = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    };
+
+    const minimumDate = new Date(today);
+    minimumDate.setDate(minimumDate.getDate() - 364);
+
+    const formatDateForInput = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+    
+      return `${year}-${month}-${day}`;
+    };
+
+    dateInput.min = formatDateForInput(minimumDate);
+    dateInput.max = toDateString(yesterday);
+    dateInput.value = toDateString(defaultDate);
+
+    const currencySymbol = (currency) => {
+      return currency === 'brl' ? 'R$' : '$';
+    };
+
+    const formatMoney = (value, currency) => {
+      return new Intl.NumberFormat(
+        currency === 'brl' ? 'pt-BR' : 'en-US',
+        {
+          style: 'currency',
+          currency: currency.toUpperCase(),
+          maximumFractionDigits: 2,
+        }
+      ).format(value);
+    };
+
+    const setResult = (key, value) => {
+      const element = root.querySelector(`[data-result="${key}"]`);
+
+      if (element) {
+        element.textContent = value;
+      }
+    };
+
+    const setCurrencySymbol = () => {
+      symbol.textContent = currencySymbol(currencyInput.value);
+    };
+
+    setCurrencySymbol();
+
+    currencyInput.addEventListener('change', setCurrencySymbol);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const amount = Number(amountInput.value);
+      const currency = currencyInput.value;
+      const selectedDate = dateInput.value;
+
+      if (!Number.isFinite(amount) || amount <= 0) {
+        status.textContent = 'Enter a valid investment amount.';
+        return;
+      }
+
+      if (!selectedDate) {
+        status.textContent = 'Select a valid investment date.';
+        return;
+      }
+
+      if (
+        selectedDate < dateInput.min ||
+        selectedDate > dateInput.max
+      ) {
+        status.textContent =
+          'The free price service only supports dates from the last 364 days.';
+        return;
+      }
+
+      const [year, month, day] = selectedDate.split('-');
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Calculating…';
+      status.textContent = 'Fetching Bitcoin prices…';
+      results.hidden = true;
+
+      try {
+        const historyUrl =
+          `https://api.coingecko.com/api/v3/coins/bitcoin/history` +
+          `?date=${day}-${month}-${year}&localization=false`;
+
+        const currentUrl =
+          `https://api.coingecko.com/api/v3/simple/price` +
+          `?ids=bitcoin&vs_currencies=${currency}`;
+
+        const [historyResponse, currentResponse] = await Promise.all([
+          fetch(historyUrl, {
+            method: 'GET',
+            headers: {
+              accept: 'application/json',
+            },
+          }),
+          fetch(currentUrl, {
+            method: 'GET',
+            headers: {
+              accept: 'application/json',
+            },
+          }),
+        ]);
+
+        if (historyResponse.status === 429 || currentResponse.status === 429) {
+          throw new Error(
+            'The price service received too many requests. Please wait a moment and try again.'
+          );
+        }
+
+        if (!historyResponse.ok) {
+          throw new Error(
+            `Historical price request failed with status ${historyResponse.status}.`
+          );
+        }
+
+        if (!currentResponse.ok) {
+          throw new Error(
+            `Current price request failed with status ${currentResponse.status}.`
+          );
+        }
+
+        const history = await historyResponse.json();
+        const current = await currentResponse.json();
+
+        const historicalPrice =
+          history?.market_data?.current_price?.[currency];
+
+        const currentPrice =
+          current?.bitcoin?.[currency];
+
+        if (
+          typeof historicalPrice !== 'number' ||
+          historicalPrice <= 0
+        ) {
+          throw new Error(
+            'No Bitcoin price was found for that date. Try the following day.'
+          );
+        }
+
+        if (
+          typeof currentPrice !== 'number' ||
+          currentPrice <= 0
+        ) {
+          throw new Error(
+            'The current Bitcoin price is temporarily unavailable.'
+          );
+        }
+
+        const btcAmount = amount / historicalPrice;
+        const currentValue = btcAmount * currentPrice;
+        const profit = currentValue - amount;
+        const returnPercent = (profit / amount) * 100;
+        const signClass = profit >= 0 ? 'positive' : 'negative';
+
+        setResult(
+          'currentValue',
+          formatMoney(currentValue, currency)
+        );
+
+        setResult(
+          'btcAmount',
+          `${btcAmount.toFixed(8)} BTC`
+        );
+
+        setResult(
+          'profit',
+          `${profit >= 0 ? '+' : ''}${formatMoney(profit, currency)}`
+        );
+
+        setResult(
+          'return',
+          `${returnPercent >= 0 ? '+' : ''}${returnPercent.toLocaleString(
+            root.dataset.locale || 'en-US',
+            {
+              maximumFractionDigits: 2,
+            }
+          )}%`
+        );
+
+        setResult(
+          'historicalPrice',
+          formatMoney(historicalPrice, currency)
+        );
+
+        setResult(
+          'currentPrice',
+          formatMoney(currentPrice, currency)
+        );
+
+        const profitElement =
+          root.querySelector('[data-result="profit"]');
+
+        const returnElement =
+          root.querySelector('[data-result="return"]');
+
+        if (profitElement) {
+          profitElement.classList.remove('positive', 'negative');
+          profitElement.classList.add(signClass);
+        }
+
+        if (returnElement) {
+          returnElement.classList.remove('positive', 'negative');
+          returnElement.classList.add(signClass);
+        }
+
+        root.dataset.shareText =
+          `If I had invested ${formatMoney(amount, currency)} ` +
+          `in Bitcoin on ${selectedDate}, it could be worth about ` +
+          `${formatMoney(currentValue, currency)} today ` +
+          `(${returnPercent >= 0 ? '+' : ''}${returnPercent.toFixed(2)}%).`;
+
+        results.hidden = false;
+        status.textContent = '';
+      } catch (error) {
+        console.error('Bitcoin calculator error:', error);
+
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : 'Unable to calculate right now.';
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Calculate return';
+      }
+    });
+
+    shareButton.addEventListener('click', async () => {
+      const shareText = root.dataset.shareText;
+
+      if (!shareText) {
+        status.textContent = 'Calculate a result before copying.';
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(shareText);
+
+        shareButton.textContent = 'Result copied!';
+
+        window.setTimeout(() => {
+          shareButton.textContent = 'Copy result';
+        }, 1800);
+      } catch {
+        status.textContent =
+          'Copying failed. Select the result manually.';
+      }
+    });
+  }
+
+  initializeBitcoinCalculator();
+
+  document.addEventListener(
+    'astro:page-load',
+    initializeBitcoinCalculator
+  );
+</script>
+
+<style>
+  .btc-calculator { --accent:#f7931a; max-width:920px; margin:2.5rem auto; padding:clamp(1.25rem,4vw,2.5rem); color:#edf2f7; background:linear-gradient(145deg,#151a22,#0b0e13); border:1px solid #29313d; border-radius:24px; box-shadow:0 24px 70px #0007; }
+  .calculator-heading h2 { margin:.35rem 0 .5rem; font-size:clamp(1.65rem,4vw,2.5rem); line-height:1.1; }
+  .calculator-heading p,.disclaimer { color:#9ba7b7; }
+  .eyebrow { color:var(--accent); font-size:.72rem; font-weight:800; letter-spacing:.15em; }
+  .calculator-form { display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:1rem; align-items:end; margin:2rem 0 1rem; }
+  label { display:grid; gap:.5rem; color:#cbd5e1; font-size:.85rem; font-weight:650; }
+  input,select { width:100%; min-height:48px; padding:.75rem .85rem; color:#fff; background:#0c1118; border:1px solid #344050; border-radius:10px; font:inherit; box-sizing:border-box; }
+  input:focus,select:focus { outline:2px solid #f7931a66; border-color:var(--accent); }
+  .money-input { position:relative; }
+  .money-input span { position:absolute; left:.85rem; top:50%; transform:translateY(-50%); color:#9ba7b7; }
+  .money-input input { padding-left:2.45rem; }
+  button { min-height:48px; padding:.75rem 1rem; color:#111; background:var(--accent); border:0; border-radius:10px; font-weight:800; cursor:pointer; }
+  button:hover { filter:brightness(1.08); }
+  button:disabled { cursor:wait; opacity:.65; }
+  .calculator-form button { grid-column:1/-1; }
+  .status { min-height:1.5rem; color:#ffba6b; }
+  .results { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1rem; }
+  .result-card { padding:1.1rem; background:#111721; border:1px solid #29313d; border-radius:14px; }
+  .result-card.primary { background:linear-gradient(135deg,#2d1b09,#151a22); border-color:#724514; }
+  .result-card span { display:block; margin-bottom:.4rem; color:#9ba7b7; font-size:.8rem; }
+  .result-card strong { font-size:clamp(1.15rem,3vw,1.65rem); }
+  .positive { color:#43d69c; }.negative { color:#ff6b73; }
+  .price-summary { grid-column:1/-1; display:flex; flex-wrap:wrap; justify-content:space-between; gap:.75rem; padding:1rem; color:#aab5c3; background:#0c1118; border-radius:10px; font-size:.84rem; }
+  .share-button { grid-column:1/-1; color:#f6a33e; background:transparent; border:1px solid #724514; }
+  .disclaimer { margin:1.5rem 0 0; font-size:.72rem; line-height:1.6; }
+  @media (max-width:720px) { .calculator-form,.results { grid-template-columns:1fr; }.price-summary,.share-button { grid-column:auto; } }
+</style>

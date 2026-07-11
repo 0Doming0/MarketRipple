@@ -1,0 +1,21 @@
+---
+interface Props {
+  href?: string;
+}
+const { href = '#bitcoin-calculator' } = Astro.props;
+---
+
+<aside class="calculator-cta">
+  <div>
+    <strong>How much would your Bitcoin investment be worth today?</strong>
+    <span>Choose a date and discover your hypothetical return in seconds.</span>
+  </div>
+  <a href={href}>Run the numbers →</a>
+</aside>
+
+<style>
+  .calculator-cta { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin:2rem 0; padding:1.25rem; color:#eef2f7; background:#121821; border-left:4px solid #f7931a; border-radius:10px; }
+  strong,span { display:block; } span { margin-top:.3rem; color:#9ba7b7; font-size:.9rem; }
+  a { flex:none; padding:.7rem 1rem; color:#111; background:#f7931a; border-radius:8px; font-weight:800; text-decoration:none; }
+  @media (max-width:640px) { .calculator-cta { align-items:flex-start; flex-direction:column; } }
+</style>
