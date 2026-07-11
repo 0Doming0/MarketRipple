@@ -55,7 +55,7 @@ export default defineConfig({
   ],
   redirects: {
       '/go/bybit': 'https://www.bybit.com/invite?ref=RK4YAG5&medium=referral&utm_campaign=evergreen&share_to=link',
-      '/': '/blog'
+      '/': '/blog/'
     },
 
   vite: {

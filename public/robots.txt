@@ -3,6 +3,7 @@
 # Regra global para todos os crawlers
 User-agent: *
 Allow: /
+Allow: /blog/
 
 # Evita o desperdício de rastreamento (Crawl Budget) em páginas de busca interna ou APIs locais
 Disallow: /search
@@ -10,4 +11,4 @@ Disallow: /api/
 Disallow: /go/
 
 # Aponta o caminho absoluto do seu sitemap gerado pelo @astrojs/sitemap
-Sitemap: https://www.marketripple.com/sitemap-index.xml
+Sitemap: https://www.marketripplenews.com/sitemap-index.xml
